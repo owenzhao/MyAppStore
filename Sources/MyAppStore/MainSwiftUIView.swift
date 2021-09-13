@@ -75,7 +75,7 @@ public struct MainSwiftUIView: View {
                 
                 prepareAppInfos()
             })
-        }
+        }.navigationTitle("I Am Window Title")
     }
     
     private func replaceSlashWithColon(_ str:inout String) {
