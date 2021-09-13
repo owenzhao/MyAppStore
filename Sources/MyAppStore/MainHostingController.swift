@@ -21,6 +21,7 @@ class MainHostingController: NSHostingController<MainSwiftUIView> {
             var frame = window.frame
             frame.size = NSSize(width: 800, height: 600)
             window.setFrame(frame, display: false, animate: false)
+            window.center()
         }
     }
 }

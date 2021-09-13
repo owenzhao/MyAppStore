@@ -5,9 +5,9 @@
         "package": "QRCodeKit",
         "repositoryURL": "git@github.com:owenzhao/QRCodeKit.git",
         "state": {
-          "branch": "1.0.0",
-          "revision": "05326d2208498f6f5edd23127b45a14d27ee2185",
-          "version": null
+          "branch": null,
+          "revision": "de4175c3cf86816ed800e48b67ddf44ed5a50082",
+          "version": "1.0.1"
         }
       },
       {

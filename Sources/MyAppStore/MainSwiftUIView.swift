@@ -279,7 +279,7 @@ struct MainSwiftUIView_Previews: PreviewProvider {
                     homeURL:"",
                     appStoreURL: ""),
             AppInfo(icon: png2json(name: "subree"),
-                    name: NSLocalizedString("SubReee", comment: ""),
+                    name: NSLocalizedString("SubRee", comment: ""),
                     version: "1.1.1",
                     changelog: "some logs",
                     homeURL: "",
