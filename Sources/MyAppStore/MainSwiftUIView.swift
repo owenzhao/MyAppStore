@@ -25,7 +25,7 @@ public struct MainSwiftUIView: View {
         VStack {
             HStack {
                 Spacer()
-                Picker(selection: $platform, label: Text("Platform")) {
+                Picker(selection: $platform, label: Text("Platform", bundle: .module)) {
                     Text(RunningPlatform.all.rawValue).tag(RunningPlatform.all)
                     Text(RunningPlatform.macOS.rawValue).tag(RunningPlatform.macOS)
                     Text(RunningPlatform.iOS.rawValue).tag(RunningPlatform.iOS)
@@ -75,7 +75,7 @@ public struct MainSwiftUIView: View {
                 
                 prepareAppInfos()
             })
-        }.navigationTitle("I Am Window Title")
+        }
     }
     
     private func replaceSlashWithColon(_ str:inout String) {

@@ -194,6 +194,14 @@ public enum RunningPlatform: String, CaseIterable, Identifiable, Codable {
     }
     
     public var id: String { self.rawValue }
+    public var localizedString:String {
+        switch self {
+        case .all:
+            return NSLocalizedString("all", bundle: .module, comment: "")
+        default:
+            return self.rawValue
+        }
+    }
 }
 
 struct AppInfoSwiftUIView_Previews: PreviewProvider {
