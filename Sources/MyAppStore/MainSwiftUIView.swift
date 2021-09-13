@@ -26,9 +26,9 @@ public struct MainSwiftUIView: View {
             HStack {
                 Spacer()
                 Picker(selection: $platform, label: Text("Platform", bundle: .module)) {
-                    Text(RunningPlatform.all.rawValue).tag(RunningPlatform.all)
-                    Text(RunningPlatform.macOS.rawValue).tag(RunningPlatform.macOS)
-                    Text(RunningPlatform.iOS.rawValue).tag(RunningPlatform.iOS)
+                    Text(RunningPlatform.all.localizedString).tag(RunningPlatform.all)
+                    Text(RunningPlatform.macOS.localizedString).tag(RunningPlatform.macOS)
+                    Text(RunningPlatform.iOS.localizedString).tag(RunningPlatform.iOS)
                 }.frame(width: 150, alignment: .trailing)
                 .onChange(of: platform, perform: { _ in
                     prepareAppInfos()
