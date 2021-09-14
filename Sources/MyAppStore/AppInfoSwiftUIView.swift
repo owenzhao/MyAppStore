@@ -189,7 +189,7 @@ public enum RunningPlatform: String, CaseIterable, Identifiable, Codable {
         case .tvOS:
             return "📺"
         case .all:
-            return ""
+            return "💻📱"
         }
     }
     

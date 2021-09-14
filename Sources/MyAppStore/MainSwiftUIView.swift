@@ -25,7 +25,29 @@ public struct MainSwiftUIView: View {
         VStack {
             HStack {
                 Spacer()
-                Picker(selection: $platform, label: Text("Platform", bundle: .module)) {
+                Button(action: fileBug, label: {
+                    Image(systemName: "ladybug")
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
+                }).buttonStyle(PlainButtonStyle())
+                Button(action: buyMeACoffee, label: {
+                    HStack {
+                        Image("bmc-logo", bundle: .module)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 24, height: 24, alignment: .center)
+                            .help("Buy developer a coffee")
+                            
+                    }
+                }).buttonStyle(PlainButtonStyle())
+                Button(action: follow, label: {
+                    Image("twitter", bundle: .module)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24, alignment: .center)
+                        .help("Follow developer on Twitter")
+                }).buttonStyle(PlainButtonStyle())
+                Picker(selection: $platform, label: Text(platform.icon)) {
                     Text(RunningPlatform.all.localizedString).tag(RunningPlatform.all)
                     Text(RunningPlatform.macOS.localizedString).tag(RunningPlatform.macOS)
                     Text(RunningPlatform.iOS.localizedString).tag(RunningPlatform.iOS)
@@ -33,7 +55,7 @@ public struct MainSwiftUIView: View {
                 .onChange(of: platform, perform: { _ in
                     prepareAppInfos()
                 })
-            }
+            }.padding([.top, .bottom], 8)
 
             List(filteredAppInfos.indices, id:\.self) { idx in
                 Safe($filteredAppInfos, index: idx) { appInfo in
@@ -106,6 +128,29 @@ public struct MainSwiftUIView: View {
         }).sorted(by: {
             $0.platform.rawValue.localizedCompare($1.platform.rawValue) == .orderedAscending
         })
+    }
+    
+    private func follow() {
+        // follow my twitter account.
+        NSWorkspace.shared.open(URL(string: "https://twitter.com/owenzhao")!)
+    }
+    
+    private func buyMeACoffee() {
+        let alert = NSAlert()
+        let bundle = Bundle.module
+        alert.icon = bundle.image(forResource: "bmc-logo")
+        alert.alertStyle = .informational
+        alert.messageText = NSLocalizedString("Buy a coffee for the developer.", bundle: .module, comment: "")
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        let replyButton = alert.runModal()
+        if replyButton == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/owenzhao")!)
+        }
+    }
+    
+    private func fileBug() {
+        
     }
 }
 
@@ -285,6 +330,7 @@ struct MainSwiftUIView_Previews: PreviewProvider {
                     homeURL: "",
                     appStoreURL: "")
         ]).environment(\.locale, .init(identifier: "zh"))
+        .frame(width: 800, height: 600, alignment: .center)
     }
     
     static func png2json(name:String) -> String {
