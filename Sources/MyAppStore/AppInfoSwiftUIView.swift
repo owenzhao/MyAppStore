@@ -72,7 +72,9 @@ struct AppInfoSwiftUIView: View {
             
             alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: { response in
                 if response == .alertFirstButtonReturn {
-                    NSPasteboard.general.setString(appInfo.appStoreURL, forType: .string)
+                    let pb = NSPasteboard.general
+                    pb.declareTypes([.string], owner: nil)
+                    pb.setString(appInfo.appStoreURL, forType: .string)
                 }
             })
         } else {
