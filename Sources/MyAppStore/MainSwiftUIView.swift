@@ -36,7 +36,7 @@ public struct MainSwiftUIView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 24, height: 24, alignment: .center)
-                            .help("Buy developer a coffee")
+                            .help(Text("Buy developer a coffee"))
                             
                     }
                 }).buttonStyle(PlainButtonStyle())
