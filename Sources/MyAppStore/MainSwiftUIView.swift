@@ -170,7 +170,7 @@ public struct MainSwiftUIView: View {
         }
         
         let mailTo = "owenzx+feedback@gmail.com"
-        let title = NSLocalizedString("Feedback for App \(appName)", bundle: .module, comment: "")
+        let title = String.localizedStringWithFormat(NSLocalizedString("Feedback for App %@", bundle: .module, comment: ""), appName)
         let detail = NSLocalizedString("Please use Chinese or English.", bundle: .module, comment: "")
         
         let service = NSSharingService(named: NSSharingService.Name.composeEmail)!
