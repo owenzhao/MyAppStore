@@ -29,6 +29,7 @@ public struct MainSwiftUIView: View {
                     Image(systemName: "ladybug")
                         .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
+                        .help(Text("Report an issue to developer", bundle: .module))
                 }).buttonStyle(PlainButtonStyle())
                 Button(action: buyMeACoffee, label: {
                     HStack {
@@ -45,7 +46,7 @@ public struct MainSwiftUIView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24, alignment: .center)
-                        .help("Follow developer on Twitter")
+                        .help(Text("Follow developer on Twitter", bundle: .module))
                 }).buttonStyle(PlainButtonStyle())
                 Picker(selection: $platform, label: Text(platform.icon)) {
                     Text(RunningPlatform.all.localizedString).tag(RunningPlatform.all)
@@ -141,8 +142,8 @@ public struct MainSwiftUIView: View {
         alert.icon = bundle.image(forResource: "bmc-logo")
         alert.alertStyle = .informational
         alert.messageText = NSLocalizedString("Buy a coffee for the developer.", bundle: .module, comment: "")
-        alert.addButton(withTitle: "OK")
-        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: NSLocalizedString("OK", bundle: .module, comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Cancel", bundle: .module, comment: ""))
         let replyButton = alert.runModal()
         if replyButton == .alertFirstButtonReturn {
             NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/owenzhao")!)
