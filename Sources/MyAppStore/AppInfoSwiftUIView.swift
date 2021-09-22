@@ -56,10 +56,10 @@ struct AppInfoSwiftUIView: View {
         if appInfo.platform == .iOS {
             let alert = NSAlert()
             alert.alertStyle = .informational
-            alert.messageText = "Scan To Download"
+            alert.messageText = NSLocalizedString("Scan To Download", bundle: .module, comment: "")
             
-            alert.addButton(withTitle: "Copy URL")
-            alert.addButton(withTitle: "Close")
+            alert.addButton(withTitle: NSLocalizedString("Copy URL", bundle: .module, comment: ""))
+            alert.addButton(withTitle: NSLocalizedString("Close", bundle: .module, comment: ""))
             let imageView = NSImageView(frame: NSRect(x: 0, y: 0, width: 120, height: 120))
             imageView.image = {
                 var qrcode = QRCode(URL(string: appInfo.appStoreURL.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!)!
@@ -72,9 +72,7 @@ struct AppInfoSwiftUIView: View {
             
             alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: { response in
                 if response == .alertFirstButtonReturn {
-                    print("first button")
-                } else {
-                    print("second button")
+                    NSPasteboard.general.setString(appInfo.appStoreURL, forType: .URL)
                 }
             })
         } else {
