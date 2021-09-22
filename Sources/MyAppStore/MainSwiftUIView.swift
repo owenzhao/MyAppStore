@@ -141,7 +141,7 @@ public struct MainSwiftUIView: View {
         let bundle = Bundle.module
         alert.icon = bundle.image(forResource: "bmc-logo")
         alert.alertStyle = .informational
-        alert.messageText = NSLocalizedString("Buy a coffee for the developer.", bundle: .module, comment: "")
+        alert.messageText = NSLocalizedString("Buy a coffee for the developer！", bundle: .module, comment: "")
         alert.addButton(withTitle: NSLocalizedString("OK", bundle: .module, comment: ""))
         alert.addButton(withTitle: NSLocalizedString("Cancel", bundle: .module, comment: ""))
         let replyButton = alert.runModal()
@@ -151,7 +151,25 @@ public struct MainSwiftUIView: View {
     }
     
     private func fileBug() {
+        let id = Bundle.main.bundleIdentifier!
+        let appName:String
         
+        switch id {
+        case "com.parussoft.iOS-Poster-2":
+            appName = NSLocalizedString("Poster 2", bundle: .module, comment: "")
+        case "com.parussoft.Poster":
+            appName = NSLocalizedString("Poster 2", bundle: .module, comment: "")
+        case "com.parussoft.SubRee":
+            appName = NSLocalizedString("SubRee", bundle: .module, comment: "")
+        case "com.parussoft.App-Demo":
+            appName = NSLocalizedString("App Demo", bundle: .module, comment: "")
+        case "com.parussoft.Xliff-Tool":
+            appName = NSLocalizedString("Xliff Tool", bundle: .module, comment: "")
+        default:
+            appName = id
+        }
+        
+        print("App name is \(appName).")
     }
 }
 
