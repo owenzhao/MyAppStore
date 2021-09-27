@@ -211,76 +211,141 @@ extension MainSwiftUIView {
     func download() {
         // download file list
         let url = URL(string: "https://parussoft.com/app_infos/AllApps.json")!
-        let session = URLSession.shared.downloadTask(with: url) { [self] downloadFileURL, response, error in
-            guard error == nil else {
-                DispatchQueue.main.async {
-                    let alert = NSAlert(error: error!)
-                    alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//        let session = URLSession.shared.downloadTask(with: url) { [self] downloadFileURL, response, error in
+//            guard error == nil else {
+//                DispatchQueue.main.async {
+//                    let alert = NSAlert(error: error!)
+//                    alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                }
+//                
+//                return
+//            }
+//            
+//            guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
+//                let alert = NSAlert()
+//                alert.alertStyle = .critical
+//                alert.messageText = "Server Error"
+//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                return
+//            }
+//            
+//            // move url to my place
+//            let fm = FileManager.default
+//            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+//            let fileName = "AllApps.json"
+//            let outputURL = URL(fileURLWithPath: fileName, isDirectory: false, relativeTo: cacheFolderURL)
+//            // get new app infos
+//            var newFileList = getAppInfos(downloadFileURL!)
+//            
+//            // comparing which to download
+//            if fm.fileExists(atPath: outputURL.path) {
+//                // get old app infos
+//                let oldFileList = getAppInfos(outputURL)
+//                
+//                for (name, version) in oldFileList {
+//                    if newFileList[name] == version {
+//                        newFileList[name] = nil
+//                    }
+//                }
+//            }
+//
+//            // get original fileList
+//            let source = URL(fileURLWithPath: "AllApps.json", isDirectory: false, relativeTo: cacheFolderURL)
+//            let jsonData = try! Data(contentsOf: source)
+//            let decoder = JSONDecoder()
+//            let fileList = try! decoder.decode([String:String].self, from: jsonData)
+//            
+//            var toBeDownloadedFileList = [String:String]()
+//            
+//            newFileList.forEach { name, version in
+//                if let originalVersion = fileList[name],
+//                   originalVersion == version {
+//                    // do nothing
+//                } else {
+//                    toBeDownloadedFileList[name] = version
+//                }
+//            }
+//            
+//            let jsonFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: url)
+//            toBeDownloadedFileList.forEach {name, _ in
+//                let jsonURL = URL(string: name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + ".json", relativeTo: jsonFolder)
+//                download(jsonURL!)
+//            }
+//            
+//            // save temp files
+//            if fm.fileExists(atPath: outputURL.path) {
+//                try! FileManager.default.removeItem(at: outputURL)
+//            }
+//            
+//            try! fm.copyItem(at: downloadFileURL!, to: outputURL)
+//        }
+//        
+//        session.resume()
+        
+        
+        
+        let downloadFileURL = url
+        URLSession.shared.dataTaskPublisher(for: downloadFileURL)
+            .compactMap { data, response -> Data? in
+                if let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) {
+                    return data
                 }
                 
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
-                let alert = NSAlert()
-                alert.alertStyle = .critical
-                alert.messageText = "Server Error"
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
-                return
-            }
-            
-            // move url to my place
-            let fm = FileManager.default
-            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-            let fileName = "AllApps.json"
-            let outputURL = URL(fileURLWithPath: fileName, isDirectory: false, relativeTo: cacheFolderURL)
-            // get new app infos
-            var newFileList = getAppInfos(downloadFileURL!)
-            
-            // comparing which to download
-            if fm.fileExists(atPath: outputURL.path) {
-                // get old app infos
-                let oldFileList = getAppInfos(outputURL)
+                return nil
+            }.sink { _ in
                 
-                for (name, version) in oldFileList {
-                    if newFileList[name] == version {
-                        newFileList[name] = nil
+            } receiveValue: { data in
+                // move url to my place
+                let fm = FileManager.default
+                let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+                let fileName = "AllApps.json"
+                let outputURL = URL(fileURLWithPath: fileName, isDirectory: false, relativeTo: cacheFolderURL)
+                // get new app infos
+                var newFileList = getAppInfos(downloadFileURL)
+                
+                // comparing which to download
+                if fm.fileExists(atPath: outputURL.path) {
+                    // get old app infos
+                    let oldFileList = getAppInfos(outputURL)
+                    
+                    for (name, version) in oldFileList {
+                        if newFileList[name] == version {
+                            newFileList[name] = nil
+                        }
                     }
                 }
+
+                // get original fileList
+                let source = URL(fileURLWithPath: "AllApps.json", isDirectory: false, relativeTo: cacheFolderURL)
+                let jsonData = try! Data(contentsOf: source)
+                let decoder = JSONDecoder()
+                let fileList = try! decoder.decode([String:String].self, from: jsonData)
+                
+                var toBeDownloadedFileList = [String:String]()
+                
+                newFileList.forEach { name, version in
+                    if let originalVersion = fileList[name],
+                       originalVersion == version {
+                        // do nothing
+                    } else {
+                        toBeDownloadedFileList[name] = version
+                    }
+                }
+                
+                let jsonFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: url)
+                toBeDownloadedFileList.forEach {name, _ in
+                    let jsonURL = URL(string: name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + ".json", relativeTo: jsonFolder)
+                    download(jsonURL!)
+                }
+                
+                // save temp files
+                if fm.fileExists(atPath: outputURL.path) {
+                    try! FileManager.default.removeItem(at: outputURL)
+                }
+                
+                try! fm.copyItem(at: downloadFileURL, to: outputURL)
             }
 
-            // get original fileList
-            let source = URL(fileURLWithPath: "AllApps.json", isDirectory: false, relativeTo: cacheFolderURL)
-            let jsonData = try! Data(contentsOf: source)
-            let decoder = JSONDecoder()
-            let fileList = try! decoder.decode([String:String].self, from: jsonData)
-            
-            var toBeDownloadedFileList = [String:String]()
-            
-            newFileList.forEach { name, version in
-                if let originalVersion = fileList[name],
-                   originalVersion == version {
-                    // do nothing
-                } else {
-                    toBeDownloadedFileList[name] = version
-                }
-            }
-            
-            let jsonFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: url)
-            toBeDownloadedFileList.forEach {name, _ in
-                let jsonURL = URL(string: name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + ".json", relativeTo: jsonFolder)
-                download(jsonURL!)
-            }
-            
-            // save temp files
-            if fm.fileExists(atPath: outputURL.path) {
-                try! FileManager.default.removeItem(at: outputURL)
-            }
-            
-            try! fm.copyItem(at: downloadFileURL!, to: outputURL)
-        }
-        
-        session.resume()
     }
     
     func getAppInfos(_ url:URL) -> [String:String] {
@@ -291,52 +356,98 @@ extension MainSwiftUIView {
     }
     
     func download(_ url:URL) {
-        let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
-            guard error == nil else {
-                let alert = NSAlert(error: error!)
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
-                let alert = NSAlert()
-                alert.alertStyle = .critical
-                alert.messageText = "Server Error"
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            let jsonData = try! Data(contentsOf: fileURL!)
-            let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
-
-            if let index = appInfos.firstIndex(where: {
-                $0.name == appInfo.name
-            }) {
-                appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
-            } else {
-                appInfos.append(appInfo)
-            }
-            
-            prepareAppInfos()
-            
-            // save temp files
-            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
-            if !FileManager.default.fileExists(atPath: subFolder.path) {
-                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
-            }
-            
-            var filename = "\(appInfo.name)_\(appInfo.lang)"
-            replaceSlashWithColon(&filename)
-            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
-            if FileManager.default.fileExists(atPath: url.path) {
-                try! FileManager.default.removeItem(at: url)
-            }
-            try! FileManager.default.copyItem(at: fileURL!, to: url)
-        }
+//        let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
+//            guard error == nil else {
+//                let alert = NSAlert(error: error!)
+//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                return
+//            }
+//
+//            guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
+//                let alert = NSAlert()
+//                alert.alertStyle = .critical
+//                alert.messageText = "Server Error"
+//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                return
+//            }
+//
+//            let decoder = JSONDecoder()
+//            let jsonData = try! Data(contentsOf: fileURL!)
+//            let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
+//
+//            if let index = appInfos.firstIndex(where: {
+//                $0.name == appInfo.name
+//            }) {
+//                appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
+//            } else {
+//                appInfos.append(appInfo)
+//            }
+//
+//            prepareAppInfos()
+//
+//            // save temp files
+//            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+//            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+//            if !FileManager.default.fileExists(atPath: subFolder.path) {
+//                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
+//            }
+//
+//            var filename = "\(appInfo.name)_\(appInfo.lang)"
+//            replaceSlashWithColon(&filename)
+//            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
+//            if FileManager.default.fileExists(atPath: url.path) {
+//                try! FileManager.default.removeItem(at: url)
+//            }
+//            try! FileManager.default.copyItem(at: fileURL!, to: url)
+//        }
+//
+//        session.resume()
         
-        session.resume()
+        
+        let fileURL = url
+        URLSession.shared.dataTaskPublisher(for: fileURL)
+            .compactMap { data, response -> Data? in
+                if let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) {
+                    return data
+                }
+                
+                return nil
+            }.sink { _ in
+                
+            } receiveValue: { data in
+                let decoder = JSONDecoder()
+                let jsonData = try! Data(contentsOf: fileURL)
+                let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
+
+                if let index = appInfos.firstIndex(where: {
+                    $0.name == appInfo.name
+                }) {
+                    appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
+                } else {
+                    appInfos.append(appInfo)
+                }
+                
+                prepareAppInfos()
+                
+                // save temp files
+                let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+                let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+                if !FileManager.default.fileExists(atPath: subFolder.path) {
+                    try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
+                }
+                
+                var filename = "\(appInfo.name)_\(appInfo.lang)"
+                replaceSlashWithColon(&filename)
+                let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
+                if FileManager.default.fileExists(atPath: url.path) {
+                    try! FileManager.default.removeItem(at: url)
+                }
+                try! FileManager.default.copyItem(at: fileURL, to: url)
+            }
+
+            
+            
+        
     }
 }
 
