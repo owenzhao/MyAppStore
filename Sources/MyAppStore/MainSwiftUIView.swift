@@ -113,8 +113,8 @@ public struct MainSwiftUIView: View {
     
     private func prepareAppInfos() {
         filteredAppInfos = appInfos.filter({  // remove current app
-            if let currentApp = Bundle.main.bundleIdentifier,
-               currentApp == $0.name,
+            if let bundleId = Bundle.main.bundleIdentifier,
+               bundleId == $0.bundleId,
                $0.platform == .macOS {
                 return false
             }
