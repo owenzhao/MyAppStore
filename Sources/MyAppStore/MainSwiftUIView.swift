@@ -131,6 +131,8 @@ public struct MainSwiftUIView: View {
         }).sorted(by: {
             $0.platform.rawValue.localizedCompare($1.platform.rawValue) == .orderedAscending
         })
+        
+        debugPrint("reload tableview.")
     }
     
     private func follow() {
