@@ -299,16 +299,16 @@ extension MainSwiftUIView {
     func download(_ url:URL) {
         let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
             guard error == nil else {
-                let alert = NSAlert(error: error!)
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                let alert = NSAlert(error: error!)
+//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
-                let alert = NSAlert()
-                alert.alertStyle = .critical
-                alert.messageText = "Server Error"
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+//                let alert = NSAlert()
+//                alert.alertStyle = .critical
+//                alert.messageText = "Server Error"
+//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
                 return
             }
             
