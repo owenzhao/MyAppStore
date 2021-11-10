@@ -112,7 +112,15 @@ public struct MainSwiftUIView: View {
     }
     
     private func prepareAppInfos() {
-        filteredAppInfos = appInfos.filter({
+        filteredAppInfos = appInfos.filter({  // remove current app
+            if let currentApp = Bundle.main.bundleIdentifier,
+               currentApp == $0.name,
+               $0.platform == .macOS {
+                return false
+            }
+            
+            return true
+        }).filter({
             if let lang = Locale.autoupdatingCurrent.languageCode,
                lang.lowercased().contains("zh") {
                 return $0.lang == .zh_Hans
@@ -300,8 +308,6 @@ extension MainSwiftUIView {
         
         return try! decoder.decode([String:String].self, from: jsonData)
     }
-    
-    
     
     func download(_ url:URL) {
         let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
