@@ -309,9 +309,11 @@ extension MainSwiftUIView {
                 return
             }
             
-            DispatchQueue.main.async { [fileURL] in
+            let fileHolder = fileURL
+            
+            DispatchQueue.main.async {
                 let decoder = JSONDecoder()
-                let jsonData = try! Data(contentsOf: fileURL!)
+                let jsonData = try! Data(contentsOf: fileHolder!)
                 let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
 
                 if let index = appInfos.firstIndex(where: {
@@ -337,7 +339,7 @@ extension MainSwiftUIView {
                 if FileManager.default.fileExists(atPath: url.path) {
                     try! FileManager.default.removeItem(at: url)
                 }
-                try! FileManager.default.copyItem(at: fileURL!, to: url)
+                try! FileManager.default.copyItem(at: fileHolder!, to: url)
             }
         }
         
