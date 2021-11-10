@@ -194,7 +194,6 @@ extension MainSwiftUIView {
     }
     
     func copyResources() -> URL {
-//        let source = Bundle.main.url(forResource: "AllApps", withExtension: "zip")!
         let source = Bundle.module.url(forResource: "AllApps", withExtension: "zip")!
         let fm = FileManager.default
         let cacheFolderURL = fm.urls(for: .cachesDirectory, in: .userDomainMask).first
@@ -366,7 +365,6 @@ struct MainSwiftUIView_Previews: PreviewProvider {
     }
     
     static func png2json(name:String) -> String {
-//        let url = Bundle.main.url(forResource: name, withExtension: "png")!
         let url = Bundle.module.url(forResource: name, withExtension: "png")!
         let data = try! Data(contentsOf: url)
         
