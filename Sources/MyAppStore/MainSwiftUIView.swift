@@ -309,7 +309,7 @@ extension MainSwiftUIView {
                 return
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [fileURL] in
                 let decoder = JSONDecoder()
                 let jsonData = try! Data(contentsOf: fileURL!)
                 let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
