@@ -26,6 +26,7 @@ struct AppInfoSwiftUIView: View {
                         Text(appInfo.platform.icon).font(.title)
                     }
                     Text(appInfo.name).font(.title2)
+                    Text(appInfo.bundleId)
                     Text(appInfo.version)
                 }
                 Spacer()
@@ -101,6 +102,7 @@ public struct AppInfo:Identifiable, Equatable, Hashable, Codable {
     public var changelog:String = ""
     public var homeURL:String = ""
     public var appStoreURL:String = ""
+    public var bundleId:String = ""
     
     public var isEditing = false
     
@@ -211,7 +213,8 @@ struct AppInfoSwiftUIView_Previews: PreviewProvider {
                                             version: "2.8.12",
                                             changelog: "* Removed the unintended alert after posting finished. ",
                                             homeURL:"",
-                                            appStoreURL: "")))
+                                            appStoreURL: "",
+                                            bundleId: "com.parussoft.Poster")))
             .environment(\.locale, .init(identifier: "zh"))
     }
     

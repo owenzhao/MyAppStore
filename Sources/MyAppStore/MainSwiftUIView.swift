@@ -367,13 +367,15 @@ struct MainSwiftUIView_Previews: PreviewProvider {
                     version: "2.8.12",
                     changelog: "* Removed the unintended alert after posting finished. ",
                     homeURL:"",
-                    appStoreURL: ""),
+                    appStoreURL: "",
+                    bundleId: "com.parussoft.Poster"),
             AppInfo(icon: png2json(name: "subree"),
                     name: NSLocalizedString("SubRee", comment: ""),
                     version: "1.1.1",
                     changelog: "some logs",
                     homeURL: "",
-                    appStoreURL: "")
+                    appStoreURL: "",
+                    bundleId: "com.parussoft.subree")
         ]).environment(\.locale, .init(identifier: "zh"))
         .frame(width: 800, height: 600, alignment: .center)
     }
