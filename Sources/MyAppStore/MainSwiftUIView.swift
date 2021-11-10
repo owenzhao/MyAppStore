@@ -324,9 +324,9 @@ extension MainSwiftUIView {
                 appInfos.append(appInfo)
             }
             
-            DispatchQueue.main.async {
-                prepareAppInfos()
-            }
+//            DispatchQueue.main.async {
+//                prepareAppInfos()
+//            }
             
             // save temp files
             let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
