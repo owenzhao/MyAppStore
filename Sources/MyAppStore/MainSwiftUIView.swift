@@ -79,26 +79,28 @@ public struct MainSwiftUIView: View {
                 // get remote resources
                 download()
                 
-                // read cache automatically
-                let fm = FileManager.default
-                let cacheFolderURL = fm.urls(for: .cachesDirectory, in: .userDomainMask).first
-                let source = URL(fileURLWithPath: "AllApps.json", isDirectory: false, relativeTo: cacheFolderURL)
-                let jsonData = try! Data(contentsOf: source)
-                let decoder = JSONDecoder()
-                let fileList = try! decoder.decode([String:String].self, from: jsonData)
-                let subfolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
-                
-                appInfos = fileList.map({ name, version -> AppInfo in
-                    var filename = name
-                    replaceSlashWithColon(&filename)
-                    let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subfolder)
-                    let jsonData = try! Data(contentsOf: url)
-                    return try! decoder.decode(AppInfo.self, from: jsonData)
-                })
-                
-                prepareAppInfos()
-                
-                debugPrint("tableview loaded.")
+                DispatchQueue.main.async {
+                    // read cache automatically
+                    let fm = FileManager.default
+                    let cacheFolderURL = fm.urls(for: .cachesDirectory, in: .userDomainMask).first
+                    let source = URL(fileURLWithPath: "AllApps.json", isDirectory: false, relativeTo: cacheFolderURL)
+                    let jsonData = try! Data(contentsOf: source)
+                    let decoder = JSONDecoder()
+                    let fileList = try! decoder.decode([String:String].self, from: jsonData)
+                    let subfolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+                    
+                    appInfos = fileList.map({ name, version -> AppInfo in
+                        var filename = name
+                        replaceSlashWithColon(&filename)
+                        let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subfolder)
+                        let jsonData = try! Data(contentsOf: url)
+                        return try! decoder.decode(AppInfo.self, from: jsonData)
+                    })
+                    
+                    prepareAppInfos()
+                    
+                    debugPrint("tableview loaded.")
+                }
             })
         }
     }
