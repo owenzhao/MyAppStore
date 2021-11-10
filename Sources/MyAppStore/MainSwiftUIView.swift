@@ -21,6 +21,8 @@ public struct MainSwiftUIView: View {
     @State private var filteredAppInfos = [AppInfo]()
     @State public var platform:RunningPlatform = .all
     
+    @State private var fileHolder:URL? = nil
+    
     public var body: some View {
         VStack {
             HStack {
@@ -299,6 +301,8 @@ extension MainSwiftUIView {
         return try! decoder.decode([String:String].self, from: jsonData)
     }
     
+    
+    
     func download(_ url:URL) {
         let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
             guard error == nil else {
@@ -311,7 +315,7 @@ extension MainSwiftUIView {
                 return
             }
             
-            let fileHolder = fileURL
+            self.fileHolder = fileURL
             
             DispatchQueue.main.async {
                 let decoder = JSONDecoder()
