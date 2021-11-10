@@ -317,36 +317,36 @@ extension MainSwiftUIView {
             
             self.fileHolder = fileURL
             
-            DispatchQueue.main.async {
-                let decoder = JSONDecoder()
-                let jsonData = try! Data(contentsOf: fileHolder!)
-                let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
+            let decoder = JSONDecoder()
+            let jsonData = try! Data(contentsOf: fileHolder!)
+            let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
 
-                if let index = appInfos.firstIndex(where: {
-                    $0.name == appInfo.name
-                }) {
-                    appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
-                } else {
-                    appInfos.append(appInfo)
-                }
-                
-                prepareAppInfos()
-                
-                // save temp files
-                let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-                let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
-                if !FileManager.default.fileExists(atPath: subFolder.path) {
-                    try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
-                }
-
-                var filename = "\(appInfo.name)_\(appInfo.lang)"
-                replaceSlashWithColon(&filename)
-                let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
-                if FileManager.default.fileExists(atPath: url.path) {
-                    try! FileManager.default.removeItem(at: url)
-                }
-                try! FileManager.default.copyItem(at: fileHolder!, to: url)
+            if let index = appInfos.firstIndex(where: {
+                $0.name == appInfo.name
+            }) {
+                appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
+            } else {
+                appInfos.append(appInfo)
             }
+            
+            DispatchQueue.main.async {
+                prepareAppInfos()
+            }
+            
+            // save temp files
+            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+            if !FileManager.default.fileExists(atPath: subFolder.path) {
+                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
+            }
+
+            var filename = "\(appInfo.name)_\(appInfo.lang)"
+            replaceSlashWithColon(&filename)
+            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
+            if FileManager.default.fileExists(atPath: url.path) {
+                try! FileManager.default.removeItem(at: url)
+            }
+            try! FileManager.default.copyItem(at: fileHolder!, to: url)
         }
         
         session.resume()
