@@ -273,7 +273,7 @@ extension MainSwiftUIView {
             let jsonFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: url)
             toBeDownloadedFileList.forEach {name, _ in
                 let jsonURL = URL(string: name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + ".json", relativeTo: jsonFolder)
-                download(jsonURL!)
+//                download(jsonURL!)
             }
             
             // save temp files
