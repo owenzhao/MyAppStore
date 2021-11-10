@@ -97,6 +97,8 @@ public struct MainSwiftUIView: View {
                 })
                 
                 prepareAppInfos()
+                
+                debugPrint("tableview loaded.")
             })
         }
     }
@@ -278,6 +280,8 @@ extension MainSwiftUIView {
             }
             
             try! fm.copyItem(at: downloadFileURL!, to: outputURL)
+            
+            debugPrint("download file copied.")
         }
         
         session.resume()
