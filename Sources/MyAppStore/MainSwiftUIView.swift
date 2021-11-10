@@ -273,7 +273,7 @@ extension MainSwiftUIView {
             let jsonFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: url)
             toBeDownloadedFileList.forEach {name, _ in
                 let jsonURL = URL(string: name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! + ".json", relativeTo: jsonFolder)
-//                download(jsonURL!)
+                download(jsonURL!)
             }
             
             // save temp files
@@ -329,19 +329,19 @@ extension MainSwiftUIView {
 //            }
             
             // save temp files
-            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
-            if !FileManager.default.fileExists(atPath: subFolder.path) {
-                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
-            }
-            
-            var filename = "\(appInfo.name)_\(appInfo.lang)"
-            replaceSlashWithColon(&filename)
-            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
-            if FileManager.default.fileExists(atPath: url.path) {
-                try! FileManager.default.removeItem(at: url)
-            }
-            try! FileManager.default.copyItem(at: fileURL!, to: url)
+//            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+//            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+//            if !FileManager.default.fileExists(atPath: subFolder.path) {
+//                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
+//            }
+//
+//            var filename = "\(appInfo.name)_\(appInfo.lang)"
+//            replaceSlashWithColon(&filename)
+//            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
+//            if FileManager.default.fileExists(atPath: url.path) {
+//                try! FileManager.default.removeItem(at: url)
+//            }
+//            try! FileManager.default.copyItem(at: fileURL!, to: url)
         }
         
         session.resume()
