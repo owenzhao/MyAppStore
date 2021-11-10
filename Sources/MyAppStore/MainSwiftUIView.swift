@@ -301,49 +301,45 @@ extension MainSwiftUIView {
     func download(_ url:URL) {
         let session = URLSession.shared.downloadTask(with: url) { [self] fileURL, response, error in
             guard error == nil else {
-//                let alert = NSAlert(error: error!)
-//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+                assertionFailure("\(error!)")
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
-//                let alert = NSAlert()
-//                alert.alertStyle = .critical
-//                alert.messageText = "Server Error"
-//                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+                assertionFailure("\(error!)")
                 return
             }
             
-            let decoder = JSONDecoder()
-            let jsonData = try! Data(contentsOf: fileURL!)
-            let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
+            DispatchQueue.main.async {
+                let decoder = JSONDecoder()
+                let jsonData = try! Data(contentsOf: fileURL!)
+                let appInfo = try! decoder.decode(AppInfo.self, from: jsonData)
 
-            if let index = appInfos.firstIndex(where: {
-                $0.name == appInfo.name
-            }) {
-                appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
-            } else {
-                appInfos.append(appInfo)
-            }
-            
-//            DispatchQueue.main.async {
+                if let index = appInfos.firstIndex(where: {
+                    $0.name == appInfo.name
+                }) {
+                    appInfos.replaceSubrange(index..<(index+1), with: [appInfo])
+                } else {
+                    appInfos.append(appInfo)
+                }
+                
                 prepareAppInfos()
-//            }
-            
-            // save temp files
-            let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-            let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
-            if !FileManager.default.fileExists(atPath: subFolder.path) {
-                try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
-            }
+                
+                // save temp files
+                let cacheFolderURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+                let subFolder = URL(fileURLWithPath: "jsons", isDirectory: true, relativeTo: cacheFolderURL)
+                if !FileManager.default.fileExists(atPath: subFolder.path) {
+                    try! FileManager.default.createDirectory(at: subFolder, withIntermediateDirectories: false, attributes: nil)
+                }
 
-            var filename = "\(appInfo.name)_\(appInfo.lang)"
-            replaceSlashWithColon(&filename)
-            let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
-            if FileManager.default.fileExists(atPath: url.path) {
-                try! FileManager.default.removeItem(at: url)
+                var filename = "\(appInfo.name)_\(appInfo.lang)"
+                replaceSlashWithColon(&filename)
+                let url = URL(fileURLWithPath: filename + ".json", isDirectory: false, relativeTo: subFolder)
+                if FileManager.default.fileExists(atPath: url.path) {
+                    try! FileManager.default.removeItem(at: url)
+                }
+                try! FileManager.default.copyItem(at: fileURL!, to: url)
             }
-            try! FileManager.default.copyItem(at: fileURL!, to: url)
         }
         
         session.resume()
