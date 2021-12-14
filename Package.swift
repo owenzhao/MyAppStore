@@ -7,7 +7,7 @@ let package = Package(
     name: "MyAppStore",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v11),
+        .macOS(.v10_15),
         .iOS(.v14)
     ],
     products: [
