@@ -238,10 +238,13 @@ extension MainSwiftUIView {
             }
             
             guard let httpResponse = response as? HTTPURLResponse, (200..<299).contains(httpResponse.statusCode) else {
-                let alert = NSAlert()
-                alert.alertStyle = .critical
-                alert.messageText = "Server Error"
-                alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+                DispatchQueue.main.async {
+                    let alert = NSAlert()
+                    alert.alertStyle = .critical
+                    alert.messageText = "Server Error"
+                    alert.beginSheetModal(for: NSApp.mainWindow!, completionHandler: nil)
+                }
+                
                 return
             }
             
