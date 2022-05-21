@@ -8,12 +8,16 @@
 import Cocoa
 import SwiftUI
 
-class MainHostingController: NSHostingController<MainSwiftUIView> {
+public class MainHostingController: NSHostingController<MainSwiftUIView> {
     @objc required dynamic init?(coder: NSCoder) {
         super.init(coder: coder, rootView: MainSwiftUIView())
     }
     
-    override func viewWillAppear() {
+    public override init(rootView: MainSwiftUIView) {
+        super.init(rootView: rootView)
+    }
+    
+    public override func viewWillAppear() {
         super.viewWillAppear()
         
         if let window = view.window {
