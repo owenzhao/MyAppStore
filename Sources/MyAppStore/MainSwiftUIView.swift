@@ -9,7 +9,8 @@ import SwiftUI
 import ZIPFoundation
 
 public struct MainSwiftUIView: View {
-    public init(appInfos:[AppInfo]) {
+    public init(showCloseButton:Bool = false, appInfos:[AppInfo]) {
+        self.showCloseButton = showCloseButton
         self.appInfos = appInfos
     }
     
@@ -17,7 +18,9 @@ public struct MainSwiftUIView: View {
         
     }
     
-    @State public var appInfos = [AppInfo]()
+    @State public var showCloseButton = false
+    
+    @State var appInfos = [AppInfo]()
     @State private var filteredAppInfos = [AppInfo]()
     @State public var platform:RunningPlatform = .all
     
@@ -26,13 +29,25 @@ public struct MainSwiftUIView: View {
     public var body: some View {
         VStack {
             HStack {
+                if showCloseButton {
+                    Image(systemName: "xmark.circle.fill")
+                        .resizable()
+                        .frame(width: 20, height: 20, alignment: .center)
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.red)
+                        .padding([.leading, .trailing], 10)
+                        .help(Text("Close"))
+                }
+                
                 Spacer()
+                
                 Button(action: fileBug, label: {
                     Image(systemName: "ladybug")
                         .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
                         .help(Text("Report an issue to developer", bundle: .module))
                 }).buttonStyle(PlainButtonStyle())
+                
                 Button(action: buyMeACoffee, label: {
                     HStack {
                         Image("bmc-logo", bundle: .module)
@@ -43,6 +58,7 @@ public struct MainSwiftUIView: View {
                             
                     }
                 }).buttonStyle(PlainButtonStyle())
+                
                 Button(action: follow, label: {
                     Image("twitter", bundle: .module)
                         .resizable()
@@ -50,6 +66,7 @@ public struct MainSwiftUIView: View {
                         .frame(width: 24, height: 24, alignment: .center)
                         .help(Text("Follow developer on Twitter", bundle: .module))
                 }).buttonStyle(PlainButtonStyle())
+                
                 Picker(selection: $platform, label: Text(platform.icon)) {
                     Text(RunningPlatform.all.localizedString).tag(RunningPlatform.all)
                     Text(RunningPlatform.macOS.localizedString).tag(RunningPlatform.macOS)
@@ -382,6 +399,28 @@ struct MainSwiftUIView_Previews: PreviewProvider {
                     bundleId: "com.parussoft.subree")
         ]).environment(\.locale, .init(identifier: "zh"))
         .frame(width: 800, height: 600, alignment: .center)
+        
+        MainSwiftUIView(showCloseButton: true,
+                        appInfos: [
+            AppInfo(icon: png2json(name: "poster2_mac"),
+                    name: NSLocalizedString("Poster 2", comment: ""),
+                    version: "2.8.12",
+                    changelog: "* Removed the unintended alert after posting finished. ",
+                    homeURL:"",
+                    appStoreURL: "",
+                    bundleId: "com.parussoft.Poster"),
+            AppInfo(icon: png2json(name: "subree"),
+                    name: NSLocalizedString("SubRee", comment: ""),
+                    version: "1.1.1",
+                    changelog: "some logs",
+                    homeURL: "",
+                    appStoreURL: "",
+                    bundleId: "com.parussoft.subree")
+        ])
+        .environment(\.locale, .init(identifier: "zh"))
+        .frame(width: 800, height: 600, alignment: .center)
+        
+        
     }
     
     static func png2json(name:String) -> String {
