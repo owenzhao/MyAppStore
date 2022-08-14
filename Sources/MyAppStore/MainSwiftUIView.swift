@@ -20,6 +20,8 @@ public struct MainSwiftUIView: View {
     
     var showCloseButton:Bool
     
+    @Environment(\.presentationMode) private var presentationMode
+    
     @State var appInfos = [AppInfo]()
     @State private var filteredAppInfos = [AppInfo]()
     @State public var platform:RunningPlatform = .all
@@ -30,13 +32,18 @@ public struct MainSwiftUIView: View {
         VStack {
             HStack {
                 if showCloseButton {
-                    Image(systemName: "xmark.circle.fill")
-                        .resizable()
-                        .frame(width: 20, height: 20, alignment: .center)
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.red)
-                        .padding([.leading, .trailing], 10)
-                        .help(Text("Close"))
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .resizable()
+                            .frame(width: 20, height: 20, alignment: .center)
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(.red)
+                            .padding([.leading, .trailing], 10)
+                    }
+                    .buttonStyle(.borderless)
+                    .help(Text("Close"))
                 }
                 
                 Spacer()
