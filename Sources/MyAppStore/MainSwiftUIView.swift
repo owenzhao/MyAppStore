@@ -14,11 +14,11 @@ public struct MainSwiftUIView: View {
         self.appInfos = appInfos
     }
     
-    public init() {
-        
+    public init(showCloseButton:Bool = false) {
+        self.showCloseButton = showCloseButton
     }
     
-    @State public var showCloseButton = false
+    var showCloseButton:Bool
     
     @State var appInfos = [AppInfo]()
     @State private var filteredAppInfos = [AppInfo]()
