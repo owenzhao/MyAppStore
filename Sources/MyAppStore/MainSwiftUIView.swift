@@ -21,6 +21,7 @@ public struct MainSwiftUIView: View {
     var showCloseButton:Bool
     
     @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.openURL) private var openURL
     
     @State var appInfos = [AppInfo]()
     @State private var filteredAppInfos = [AppInfo]()
@@ -181,13 +182,13 @@ public struct MainSwiftUIView: View {
         alert.icon = bundle.image(forResource: "bmc-logo")
         alert.alertStyle = .informational
         alert.messageText = NSLocalizedString("Buy a coffee for the developer！", bundle: .module, comment: "")
-        alert.informativeText = NSLocalizedString("Thank you. But Apple only allows this in IAP.", bundle: .module, comment: "")
+//        alert.informativeText = NSLocalizedString("Thank you. But Apple only allows this in IAP.", bundle: .module, comment: "")
 //        alert.addButton(withTitle: NSLocalizedString("OK", bundle: .module, comment: ""))
-//        alert.addButton(withTitle: NSLocalizedString("Cancel", bundle: .module, comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Cancel", bundle: .module, comment: ""))
         alert.addButton(withTitle: NSLocalizedString("Close", bundle: .module, comment: ""))
         let replyButton = alert.runModal()
         if replyButton == .alertFirstButtonReturn {
-//            NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/owenzhao")!)
+            openURL(URL(string: "https://buymeacoffee.com/owenzhao")!)
         }
     }
     
