@@ -184,7 +184,7 @@ public struct MainSwiftUIView: View {
         alert.messageText = NSLocalizedString("Buy a coffee for the developer！", bundle: .module, comment: "")
 //        alert.informativeText = NSLocalizedString("Thank you. But Apple only allows this in IAP.", bundle: .module, comment: "")
 //        alert.addButton(withTitle: NSLocalizedString("OK", bundle: .module, comment: ""))
-        alert.addButton(withTitle: NSLocalizedString("Cancel", bundle: .module, comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Buy", bundle: .module, comment: ""))
         alert.addButton(withTitle: NSLocalizedString("Close", bundle: .module, comment: ""))
         let replyButton = alert.runModal()
         if replyButton == .alertFirstButtonReturn {
