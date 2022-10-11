@@ -186,7 +186,7 @@ public struct MainSwiftUIView: View {
         alert.addButton(withTitle: NSLocalizedString("OK", bundle: .module, comment: ""))
 //        alert.addButton(withTitle: NSLocalizedString("Buy", bundle: .module, comment: ""))
 //        alert.addButton(withTitle: NSLocalizedString("Close", bundle: .module, comment: ""))
-//        let replyButton = alert.runModal()
+        let replyButton = alert.runModal()
 //        if replyButton == .alertFirstButtonReturn {
 //            openURL(URL(string: "https://buymeacoffee.com/owenzhao")!)
 //        }
