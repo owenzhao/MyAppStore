@@ -235,6 +235,11 @@ extension MainSwiftUIView {
         let source = Bundle.module.url(forResource: "AllApps", withExtension: "zip")!
         let fm = FileManager.default
         let cacheFolderURL = fm.urls(for: .cachesDirectory, in: .userDomainMask).first
+        
+        if fm.fileExists(atPath: cacheFolderURL!.path) == false {
+            try! fm.createDirectory(at: cacheFolderURL!, withIntermediateDirectories: true)
+        }
+        
         let destination = URL(fileURLWithPath: source.lastPathComponent, isDirectory: false, relativeTo: cacheFolderURL)
         if fm.fileExists(atPath: destination.path) {
             try! fm.removeItem(at: destination)
